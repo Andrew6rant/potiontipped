@@ -1,0 +1,1 @@
+{ "parent": "item/netherite_hoe", "textures": { "layer0": "item/netherite_hoe", "layer1": "potiontipped:item/handle"} }

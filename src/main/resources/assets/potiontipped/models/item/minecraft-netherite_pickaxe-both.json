@@ -1,0 +1,1 @@
+{ "parent": "item/netherite_pickaxe", "textures": { "layer0": "item/netherite_pickaxe", "layer1": "potiontipped:item/pickaxe", "layer2": "potiontipped:item/handle"} }

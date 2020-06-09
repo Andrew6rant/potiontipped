@@ -1,0 +1,1 @@
+{ "parent": "item/iron_pickaxe", "textures": { "layer0": "item/iron_pickaxe", "layer1": "potiontipped:item/pickaxe"} }

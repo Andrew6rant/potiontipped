@@ -1,0 +1,1 @@
+{ "parent": "item/wooden_axe", "textures": { "layer0": "item/wooden_axe", "layer1": "potiontipped:item/axe", "layer2": "potiontipped:item/handle"} }

@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "potiontipped",
+  "version": "${version}",
+  "name": "Potion Tipped",
+  "description": "Adds potion tipped variants to every tool and weapon",
+  "authors": [
+    "Crupette"
+  ],
+  "contributors": [],
+  "contact": {
+    "sources": "https://github.com/Crupette/potiontipped"
+  },
+  "license": "MIT",
+  "icon": "assets/potiontipped/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.github.Crupette.potiontipped.PotionTipped"
+    ],
+    "client": [],
+    "server": []
+  },
+  "mixins": [
+    "potiontipped.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.4.0",
+    "fabric": "*"
+  }
+}

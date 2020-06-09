@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "com.github.Crupette.potiontipped.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MiningItemToolMixin",
+    "RegistryMixin"
+  ],
+  "client": [
+    "ItemColorsMixin"
+  ],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
