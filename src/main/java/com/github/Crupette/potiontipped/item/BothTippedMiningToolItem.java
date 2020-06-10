@@ -100,4 +100,9 @@ public class BothTippedMiningToolItem extends MiningToolItem implements TippedTo
     public Item getParent() {
         return this.parent;
     }
+
+    @Override
+    public TippedItemUtil.TippedType getType() {
+        return TippedItemUtil.TippedType.BOTH;
+    }
 }

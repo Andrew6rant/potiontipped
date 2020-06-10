@@ -18,7 +18,9 @@
     "main": [
       "com.github.Crupette.potiontipped.PotionTipped"
     ],
-    "client": [],
+    "client": [
+      "com.github.Crupette.potiontipped.client.PotionTippedClient"
+    ],
     "server": []
   },
   "mixins": [

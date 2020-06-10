@@ -90,4 +90,9 @@ public class HeadTippedSwordItem extends SwordItem implements TippedTool{
     public Item getParent() {
         return this.parent;
     }
+
+    @Override
+    public TippedItemUtil.TippedType getType() {
+        return TippedItemUtil.TippedType.HEAD;
+    }
 }

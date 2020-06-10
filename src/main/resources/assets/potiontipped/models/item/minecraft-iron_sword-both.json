@@ -1,1 +1,0 @@
-{ "parent": "item/iron_sword", "textures": { "layer0": "item/iron_sword", "layer1": "potiontipped:item/sword", "layer2": "potiontipped:item/handle"} }

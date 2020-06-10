@@ -92,4 +92,9 @@ public class HeadTippedMiningToolItem extends MiningToolItem implements TippedTo
     public Item getParent() {
         return this.parent;
     }
+
+    @Override
+    public TippedItemUtil.TippedType getType() {
+        return TippedItemUtil.TippedType.HEAD;
+    }
 }
