@@ -6,6 +6,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -21,16 +22,18 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class HeadTippedSwordItem extends SwordItem implements TippedTool{
+public class TippedSwordItem extends SwordItem implements TippedTool{
     private final SwordItem parent;
+    private final TippedItemUtil.TippedType type;
 
-    public HeadTippedSwordItem(SwordItem parent) {
+    public TippedSwordItem(SwordItem parent, TippedItemUtil.TippedType type) {
         super(parent.getMaterial(),
                 (int) (parent.getAttackDamage() - parent.getMaterial().getAttackDamage()),
                 (float) parent.getAttributeModifiers(EquipmentSlot.MAINHAND).get(EntityAttributes.GENERIC_ATTACK_SPEED).toArray(new EntityAttributeModifier[] {})[0].getValue(),
                 new Settings().maxDamage(parent.getMaxDamage()));
 
         this.parent = parent;
+        this.type = type;
     }
 
     @Override
@@ -38,7 +41,7 @@ public class HeadTippedSwordItem extends SwordItem implements TippedTool{
         if(group.equals(PotionTipped.TIPPED_GROUP)){
             Registry.POTION.forEach((potion -> {
                 if(!potion.getEffects().isEmpty() && !potion.hasInstantEffect()){
-                    TippedItemUtil.expandStacks(this, potion, stacks, TippedItemUtil.TippedType.HEAD);
+                    TippedItemUtil.expandStacks(this, potion, stacks, this.type);
                 }
             }));
         }
@@ -59,6 +62,14 @@ public class HeadTippedSwordItem extends SwordItem implements TippedTool{
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         TippedItemUtil.postHit(stack, target, attacker);
         return super.postHit(stack, target, attacker);
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        if(selected && entity instanceof LivingEntity){
+            TippedItemUtil.inventoryTick(stack, (LivingEntity) entity);
+        }
+        super.inventoryTick(stack, world, entity, slot, selected);
     }
 
     @Override
@@ -93,6 +104,6 @@ public class HeadTippedSwordItem extends SwordItem implements TippedTool{
 
     @Override
     public TippedItemUtil.TippedType getType() {
-        return TippedItemUtil.TippedType.HEAD;
+        return this.type;
     }
 }

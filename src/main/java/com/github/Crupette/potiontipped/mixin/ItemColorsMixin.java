@@ -5,10 +5,13 @@ import com.github.Crupette.potiontipped.item.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.color.block.BlockColors;
+import net.minecraft.client.color.item.ItemColorProvider;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.potion.PotionUtil;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -28,23 +31,24 @@ public abstract class ItemColorsMixin {
     private static void addPotionBucketColors(BlockColors blockColors, CallbackInfoReturnable<ItemColors> ci,
                                               ItemColors itemColors){
         for(Item item : PotionTipped.TIPPED_TOOLS.values()){
-            if(item instanceof HeadTippedMiningToolItem || item instanceof HeadTippedSwordItem){
+            if(item instanceof TippedMiningToolItem || item instanceof TippedSwordItem){
                 itemColors.register(((stack, tintIndex) -> {
-                    return tintIndex > 0 ? PotionUtil.getColor(PotionUtil.getPotion(stack.getOrCreateSubTag("head"))) : -1;
-                }), item);
-            }
-            if(item instanceof HandleTippedMiningToolItem || item instanceof HandleTippedSwordItem){
-                itemColors.register(((stack, tintIndex) -> {
-                    return tintIndex > 0 ? PotionUtil.getColor(PotionUtil.getPotion(stack.getOrCreateSubTag("handle"))) : -1;
-                }), item);
-            }
-            if(item instanceof BothTippedMiningToolItem || item instanceof BothTippedSwordItem){
-                itemColors.register(((stack, tintIndex) -> {
-                    if(tintIndex == 1){
-                        return PotionUtil.getColor(PotionUtil.getPotion(stack.getOrCreateSubTag("head")));
-                    }else if(tintIndex == 2){
-                        return PotionUtil.getColor(PotionUtil.getPotion(stack.getOrCreateSubTag("handle")));
-                    }else return  -1;
+                    switch (((TippedTool)stack.getItem()).getType()){
+                        case BOTH:
+                        case HEAD:
+                            switch (tintIndex){
+                                case 1:
+                                    return PotionUtil.getColor(PotionUtil.getPotion(stack.getOrCreateSubTag("head")));
+                                case 2:
+                                    return PotionUtil.getColor(PotionUtil.getPotion(stack.getOrCreateSubTag("handle")));
+                                default:
+                                    return -1;
+                            }
+                        case HANDLE:
+                            return tintIndex == 1 ? PotionUtil.getColor(PotionUtil.getPotion(stack.getOrCreateSubTag("handle"))) : -1;
+                        default:
+                            return -1;
+                    }
                 }), item);
             }
         }

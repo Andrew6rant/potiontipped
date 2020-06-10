@@ -27,8 +27,28 @@ import java.util.Map;
 import java.util.Stack;
 
 public class TippedItemUtil {
+
     public enum TippedType {
-        NONE, HEAD, HANDLE, BOTH
+        NONE(0),
+        HEAD(1),
+        HANDLE(2),
+        BOTH(3);
+
+        private final int value;
+        TippedType(int value){
+            this.value = value;
+        }
+
+        public int getValue() { return value; }
+    }
+
+    public static TippedType getTippedType(int i) {
+        switch (i){
+            case 1: return TippedType.HEAD;
+            case 2: return TippedType.HANDLE;
+            case 3: return TippedType.BOTH;
+            default: return TippedType.NONE;
+        }
     }
 
     @Environment(EnvType.CLIENT)
@@ -116,6 +136,15 @@ public class TippedItemUtil {
                     holder.addStatusEffect(adjusted);
                 }
             }
+        }
+    }
+
+    public static String getSuffixFromType(TippedType type){
+        switch (type){
+            case HEAD: return "head";
+            case HANDLE: return "handle";
+            case BOTH: return "both";
+            default: return "unknown";
         }
     }
 }

@@ -17,7 +17,6 @@ import net.minecraft.recipe.SpecialCraftingRecipe;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.Level;
 
 public class TippedToolRecipe extends SpecialCraftingRecipe {
     public TippedToolRecipe(Identifier id) {
@@ -86,24 +85,22 @@ public class TippedToolRecipe extends SpecialCraftingRecipe {
                 toolId = Registry.ITEM.getId(((TippedTool)toolStack.getItem()).getParent());
                 if(headStack.isEmpty()){
                     potionsTag.put("head", toolStack.getSubTag("head"));
-                    if(!handleStack.isEmpty()){
-                        type = TippedItemUtil.TippedType.BOTH;
-                    }
+                    type = TippedItemUtil.getTippedType(type.getValue() | TippedItemUtil.TippedType.HEAD.getValue());
                 }
                 if(handleStack.isEmpty()){
                     potionsTag.put("handle", toolStack.getSubTag("handle"));
-                    if(!headStack.isEmpty()){
-                        type = TippedItemUtil.TippedType.BOTH;
-                    }
+                    type = TippedItemUtil.getTippedType(type.getValue() | TippedItemUtil.TippedType.HANDLE.getValue());
                 }
             }
-            if((!handleStack.isEmpty() && !headStack.isEmpty()) || type == TippedItemUtil.TippedType.BOTH){
-                newToolStack = new ItemStack(PotionTipped.TIPPED_TOOLS.get(new Identifier(toolId.getNamespace(), toolId.getPath() + "-both")));
-            }else if(!headStack.isEmpty()){
-                newToolStack = new ItemStack(PotionTipped.TIPPED_TOOLS.get(new Identifier(toolId.getNamespace(), toolId.getPath() + "-head")));
-            }else if(!handleStack.isEmpty()){
-                newToolStack = new ItemStack(PotionTipped.TIPPED_TOOLS.get(new Identifier(toolId.getNamespace(), toolId.getPath() + "-handle")));
-            }
+            if(!headStack.isEmpty())
+                type = TippedItemUtil.getTippedType(type.getValue() | TippedItemUtil.TippedType.HEAD.getValue());
+
+            if(!handleStack.isEmpty())
+                type = TippedItemUtil.getTippedType(type.getValue() | TippedItemUtil.TippedType.HANDLE.getValue());
+
+            System.out.println(TippedItemUtil.getSuffixFromType(type) + " : " + type.getValue());
+            newToolStack = new ItemStack(PotionTipped.TIPPED_TOOLS.get(new Identifier(toolId.getNamespace(), toolId.getPath() + "-" + TippedItemUtil.getSuffixFromType(type))));
+
             newToolStack.setTag(potionsTag);
             return newToolStack;
         }

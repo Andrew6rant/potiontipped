@@ -1,6 +1,7 @@
 package com.github.Crupette.potiontipped.client.resources;
 
 import com.github.Crupette.potiontipped.item.TippedTool;
+import com.github.Crupette.potiontipped.util.TippedItemUtil;
 import net.minecraft.item.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -20,6 +21,25 @@ public class TippedToolResourceBuilder {
         this.tool = tool;
     }
 
+    private String getHeadString(Item parent){
+        if(parent instanceof AxeItem){
+            return "axe";
+        }else
+        if(parent instanceof PickaxeItem){
+            return "pickaxe";
+        }else
+        if(parent instanceof ShovelItem){
+            return "shovel";
+        }else
+        if(parent instanceof HoeItem){
+            return "hoe";
+        }else
+        if(parent instanceof SwordItem){
+            return "sword";
+        }else
+        return "axe";
+    }
+
     public String build(){
         Item item = tool.getValue();
         Item parent = ((TippedTool)item).getParent();
@@ -28,32 +48,21 @@ public class TippedToolResourceBuilder {
         ret.append("{ \"parent\": \"");
 
         Identifier base = Registry.ITEM.getId(parent);
+        int layer = 1;
         ret.append(base.getNamespace()).append(":").append("item/").append(base.getPath()).append("\", \"textures\": { ");
-        ret.append("\"layer1\": \"");
-        switch(((TippedTool)item).getType()){
+        TippedItemUtil.TippedType type = ((TippedTool)item).getType();
+
+        switch (type){
             case BOTH:
-                ret.append("potiontipped:item/handle\", \"layer2\": \"");
+                ret.append("\"layer2\": \"potiontipped:item/handle\", ");
             case HEAD:
-                String append = "";
-                if(parent instanceof AxeItem){
-                    append = "axe";
-                }else if(parent instanceof PickaxeItem){
-                    append = "pickaxe";
-                }else if(parent instanceof ShovelItem){
-                    append = "shovel";
-                }else if(parent instanceof HoeItem){
-                    append = "hoe";
-                }else if(parent instanceof SwordItem){
-                    append = "sword";
-                }else {
-                    append = "pickaxe";
-                }
-                ret.append("potiontipped:item/").append(append).append("\"");
+                ret.append("\"layer1\": \"potiontipped:item/").append(getHeadString(parent)).append("\" ");
                 break;
             case HANDLE:
-                ret.append("potiontipped:item/handle\" ");
+                ret.append("\"layer1\": \"potiontipped:item/handle\" ");
                 break;
         }
+
         ret.append("} }");
 
         return ret.toString();

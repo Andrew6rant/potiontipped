@@ -22,10 +22,11 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class HeadTippedMiningToolItem extends MiningToolItem implements TippedTool{
+public class TippedMiningToolItem extends MiningToolItem implements TippedTool{
     private final MiningToolItem parent;
+    private final TippedItemUtil.TippedType type;
 
-    public HeadTippedMiningToolItem(MiningToolItem parent) {
+    public TippedMiningToolItem(MiningToolItem parent, TippedItemUtil.TippedType type) {
         super(parent.getAttackDamage() - parent.getMaterial().getAttackDamage(),
                 (float) parent.getAttributeModifiers(EquipmentSlot.MAINHAND).get(EntityAttributes.GENERIC_ATTACK_SPEED).toArray(new EntityAttributeModifier[] {})[0].getValue(),
                 parent.getMaterial(),
@@ -33,6 +34,7 @@ public class HeadTippedMiningToolItem extends MiningToolItem implements TippedTo
                 new Settings().maxDamage(parent.getMaxDamage()));
 
         this.parent = parent;
+        this.type = type;
     }
 
     @Override
@@ -40,7 +42,7 @@ public class HeadTippedMiningToolItem extends MiningToolItem implements TippedTo
         if(group.equals(PotionTipped.TIPPED_GROUP)){
             Registry.POTION.forEach((potion -> {
                 if(!potion.getEffects().isEmpty() && !potion.hasInstantEffect()){
-                    TippedItemUtil.expandStacks(this, potion, stacks, TippedItemUtil.TippedType.HEAD);
+                    TippedItemUtil.expandStacks(this, potion, stacks, this.type);
                 }
             }));
         }
@@ -61,6 +63,14 @@ public class HeadTippedMiningToolItem extends MiningToolItem implements TippedTo
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         TippedItemUtil.postHit(stack, target, attacker);
         return super.postHit(stack, target, attacker);
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        if(selected && entity instanceof LivingEntity){
+            TippedItemUtil.inventoryTick(stack, (LivingEntity) entity);
+        }
+        super.inventoryTick(stack, world, entity, slot, selected);
     }
 
     @Override
@@ -95,6 +105,6 @@ public class HeadTippedMiningToolItem extends MiningToolItem implements TippedTo
 
     @Override
     public TippedItemUtil.TippedType getType() {
-        return TippedItemUtil.TippedType.HEAD;
+        return this.type;
     }
 }
