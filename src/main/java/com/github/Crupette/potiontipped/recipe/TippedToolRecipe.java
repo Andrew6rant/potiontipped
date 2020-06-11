@@ -67,6 +67,8 @@ public class TippedToolRecipe extends SpecialCraftingRecipe {
             if (headStack.isEmpty() && handleStack.isEmpty()) continue;
 
             CompoundTag potionsTag = new CompoundTag();
+            potionsTag.put("head", new CompoundTag());
+            potionsTag.put("handle", new CompoundTag());
             if (!headStack.isEmpty()) {
                 CompoundTag headTag = new CompoundTag();
                 headTag.putString("Potion", Registry.POTION.getId(PotionUtil.getPotion(headStack)).toString());
@@ -101,7 +103,9 @@ public class TippedToolRecipe extends SpecialCraftingRecipe {
             System.out.println(TippedItemUtil.getSuffixFromType(type) + " : " + type.getValue());
             newToolStack = new ItemStack(PotionTipped.TIPPED_TOOLS.get(new Identifier(toolId.getNamespace(), toolId.getPath() + "-" + TippedItemUtil.getSuffixFromType(type))));
 
-            newToolStack.setTag(potionsTag);
+            newToolStack.setTag(toolStack.getTag());
+            newToolStack.getOrCreateSubTag("head").putString("Potion", ((CompoundTag)potionsTag.get("head")).getString("Potion"));
+            newToolStack.getOrCreateSubTag("handle").putString("Potion", ((CompoundTag)potionsTag.get("handle")).getString("Potion"));
             return newToolStack;
         }
         return ItemStack.EMPTY;
