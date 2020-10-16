@@ -119,7 +119,7 @@ public class TippedItemUtil {
                 if(headPotion.hasInstantEffect()){
                     adjusted.getEffectType().applyInstantEffect(attacker, attacker, target, adjusted.getAmplifier(), 1.D);
                 }else{
-                    target.applyStatusEffect(adjusted);
+                    target.addStatusEffect(adjusted);
                 }
             }
         }
@@ -134,7 +134,8 @@ public class TippedItemUtil {
                         effectInstance.getEffectType(), 5, effectInstance.getAmplifier());
 
                 if(!handlePotion.hasInstantEffect()){
-                    holder.applyStatusEffect(adjusted);
+                    holder.getStatusEffects();
+                    holder.addStatusEffect(adjusted);
                 }
             }
         }

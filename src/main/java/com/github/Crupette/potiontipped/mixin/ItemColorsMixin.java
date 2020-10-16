@@ -37,9 +37,9 @@ public abstract class ItemColorsMixin {
                         case BOTH:
                         case HEAD:
                             switch (tintIndex){
-                                case 1:
-                                    return PotionUtil.getColor(PotionUtil.getPotion(stack.getOrCreateSubTag("head")));
                                 case 2:
+                                    return PotionUtil.getColor(PotionUtil.getPotion(stack.getOrCreateSubTag("head")));
+                                case 1:
                                     return PotionUtil.getColor(PotionUtil.getPotion(stack.getOrCreateSubTag("handle")));
                                 default:
                                     return -1;
