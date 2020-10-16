@@ -28,6 +28,10 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	//Fuck it, artifice time
+	modImplementation "com.lettuce.fudge:artifice:0.8.1+1.16.1"
+	include "com.lettuce.fudge:artifice:0.8.1+1.16.1"
 }
 
 processResources {

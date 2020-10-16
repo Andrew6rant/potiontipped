@@ -31,6 +31,10 @@ public class PotionTipped implements ModInitializer {
 
     public static final Map<Identifier, Item> TIPPED_TOOLS = new HashMap<>();
 
+    public static Identifier id(String name) {
+        return new Identifier(MOD_ID, name);
+    }
+
     @Override
     public void onInitialize() {
         PotionTippedRecipeSerializers.init();

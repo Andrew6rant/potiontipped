@@ -100,7 +100,6 @@ public class TippedToolRecipe extends SpecialCraftingRecipe {
             if(!handleStack.isEmpty())
                 type = TippedItemUtil.getTippedType(type.getValue() | TippedItemUtil.TippedType.HANDLE.getValue());
 
-            System.out.println(TippedItemUtil.getSuffixFromType(type) + " : " + type.getValue());
             newToolStack = new ItemStack(PotionTipped.TIPPED_TOOLS.get(new Identifier(toolId.getNamespace(), toolId.getPath() + "-" + TippedItemUtil.getSuffixFromType(type))));
 
             newToolStack.setTag(toolStack.getTag());

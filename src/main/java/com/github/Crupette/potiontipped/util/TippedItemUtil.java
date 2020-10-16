@@ -8,6 +8,7 @@ import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffectUtil;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
@@ -118,7 +119,7 @@ public class TippedItemUtil {
                 if(headPotion.hasInstantEffect()){
                     adjusted.getEffectType().applyInstantEffect(attacker, attacker, target, adjusted.getAmplifier(), 1.D);
                 }else{
-                    target.addStatusEffect(adjusted);
+                    target.applyStatusEffect(adjusted);
                 }
             }
         }
@@ -130,10 +131,10 @@ public class TippedItemUtil {
         if(handlePotion != Potions.EMPTY){
             for(StatusEffectInstance effectInstance : PotionUtil.getPotionEffects(handlePotion, Collections.emptyList())){
                 StatusEffectInstance adjusted = new StatusEffectInstance(
-                        effectInstance.getEffectType(), 4, effectInstance.getAmplifier());
+                        effectInstance.getEffectType(), 5, effectInstance.getAmplifier());
 
                 if(!handlePotion.hasInstantEffect()){
-                    holder.addStatusEffect(adjusted);
+                    holder.applyStatusEffect(adjusted);
                 }
             }
         }
