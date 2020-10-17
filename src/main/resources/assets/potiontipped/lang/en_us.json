@@ -1,6 +1,7 @@
 {
   "tooltip.potiontipped.head": "Head potion",
   "tooltip.potiontipped.handle": "Handle potion",
+  "tooltip.potiontipped.uses": "Remaining uses: ",
 
   "itemGroup.potiontipped.tipped": "Tipped tools / weapons"
 }

@@ -11,6 +11,7 @@ import net.minecraft.item.MiningToolItem;
 import net.minecraft.item.PotionItem;
 import net.minecraft.item.SwordItem;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialCraftingRecipe;
@@ -67,44 +68,48 @@ public class TippedToolRecipe extends SpecialCraftingRecipe {
             if (headStack.isEmpty() && handleStack.isEmpty()) continue;
 
             CompoundTag potionsTag = new CompoundTag();
-            potionsTag.put("head", new CompoundTag());
-            potionsTag.put("handle", new CompoundTag());
+
+            ItemStack newToolStack;
+            Identifier toolId = Registry.ITEM.getId(toolStack.getItem());
+            TippedItemUtil.TippedSide type = TippedItemUtil.TippedSide.NONE;
+
+            if(toolId.getNamespace().equals(PotionTipped.MOD_ID)){
+                toolId = Registry.ITEM.getId(((TippedTool)toolStack.getItem()).getParent());
+                TippedTool tool = ((TippedTool)toolStack.getItem());
+                System.out.println("Merging types " + type + " and " + tool.getType());
+                type = TippedItemUtil.getTippedType(type.getValue() | tool.getType().getValue());
+
+                if(toolStack.getOrCreateTag().contains("head")) potionsTag.put("head", toolStack.getOrCreateSubTag("head").copy());
+                if(toolStack.getOrCreateTag().contains("handle")) potionsTag.put("handle", toolStack.getOrCreateSubTag("handle").copy());
+            }
+
             if (!headStack.isEmpty()) {
+                type = TippedItemUtil.getTippedType(type.getValue() | TippedItemUtil.TippedSide.HEAD.getValue());
                 CompoundTag headTag = new CompoundTag();
-                headTag.putString("Potion", Registry.POTION.getId(PotionUtil.getPotion(headStack)).toString());
+
+                ListTag potionEffectsTag = new ListTag();
+                PotionUtil.getPotion(headStack).getEffects().forEach(effect -> potionEffectsTag.add(effect.toTag(new CompoundTag())));
+                headTag.put("CustomPotionEffects", potionEffectsTag);
+                headTag.putInt("Uses", 8);
                 potionsTag.put("head", headTag);
             }
             if (!handleStack.isEmpty()) {
+                type = TippedItemUtil.getTippedType(type.getValue() | TippedItemUtil.TippedSide.HANDLE.getValue());
                 CompoundTag handleTag = new CompoundTag();
-                handleTag.putString("Potion", Registry.POTION.getId(PotionUtil.getPotion(handleStack)).toString());
+
+                ListTag potionEffectsTag = new ListTag();
+                PotionUtil.getPotion(handleStack).getEffects().forEach(effect -> potionEffectsTag.add(effect.toTag(new CompoundTag())));
+                handleTag.put("CustomPotionEffects", potionEffectsTag);
+
                 potionsTag.put("handle", handleTag);
             }
 
-            ItemStack newToolStack = null;
-            Identifier toolId = Registry.ITEM.getId(toolStack.getItem());
-            TippedItemUtil.TippedType type = TippedItemUtil.TippedType.NONE;
-            if(toolId.getNamespace().equals(PotionTipped.MOD_ID)){
-                toolId = Registry.ITEM.getId(((TippedTool)toolStack.getItem()).getParent());
-                if(headStack.isEmpty()){
-                    potionsTag.put("head", toolStack.getSubTag("head"));
-                    type = TippedItemUtil.getTippedType(type.getValue() | TippedItemUtil.TippedType.HEAD.getValue());
-                }
-                if(handleStack.isEmpty()){
-                    potionsTag.put("handle", toolStack.getSubTag("handle"));
-                    type = TippedItemUtil.getTippedType(type.getValue() | TippedItemUtil.TippedType.HANDLE.getValue());
-                }
-            }
-            if(!headStack.isEmpty())
-                type = TippedItemUtil.getTippedType(type.getValue() | TippedItemUtil.TippedType.HEAD.getValue());
-
-            if(!handleStack.isEmpty())
-                type = TippedItemUtil.getTippedType(type.getValue() | TippedItemUtil.TippedType.HANDLE.getValue());
-
             newToolStack = new ItemStack(PotionTipped.TIPPED_TOOLS.get(new Identifier(toolId.getNamespace(), toolId.getPath() + "-" + TippedItemUtil.getSuffixFromType(type))));
 
-            newToolStack.setTag(toolStack.getTag());
-            newToolStack.getOrCreateSubTag("head").putString("Potion", ((CompoundTag)potionsTag.get("head")).getString("Potion"));
-            newToolStack.getOrCreateSubTag("handle").putString("Potion", ((CompoundTag)potionsTag.get("handle")).getString("Potion"));
+            newToolStack.setTag(toolStack.getOrCreateTag().copy());
+            newToolStack.getOrCreateTag().put("head", potionsTag.get("head"));
+            newToolStack.getOrCreateTag().put("handle", potionsTag.get("handle"));
+
             return newToolStack;
         }
         return ItemStack.EMPTY;

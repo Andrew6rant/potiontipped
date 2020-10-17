@@ -7,8 +7,10 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.item.ItemColorProvider;
 import net.minecraft.client.color.item.ItemColors;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.potion.PotionUtil;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,6 +18,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+
+import java.util.List;
 
 @Environment(EnvType.CLIENT)
 @Mixin(ItemColors.class)
@@ -33,22 +37,24 @@ public abstract class ItemColorsMixin {
         for(Item item : PotionTipped.TIPPED_TOOLS.values()){
             if(item instanceof TippedMiningToolItem || item instanceof TippedSwordItem){
                 itemColors.register(((stack, tintIndex) -> {
-                    switch (((TippedTool)stack.getItem()).getType()){
+                    TippedTool tippedTool = ((TippedTool)stack.getItem());
+                    CompoundTag headTag = stack.getOrCreateSubTag("head");
+                    CompoundTag handleTag = stack.getOrCreateSubTag("handle");
+
+                    List<StatusEffectInstance> handleEffectCollection = PotionUtil.getCustomPotionEffects(handleTag);
+                    List<StatusEffectInstance> headEffectCollection = PotionUtil.getCustomPotionEffects(headTag);
+                    switch (tippedTool.getType()){
                         case BOTH:
                         case HEAD:
-                            switch (tintIndex){
-                                case 2:
-                                    return PotionUtil.getColor(PotionUtil.getPotion(stack.getOrCreateSubTag("head")));
-                                case 1:
-                                    return PotionUtil.getColor(PotionUtil.getPotion(stack.getOrCreateSubTag("handle")));
-                                default:
-                                    return -1;
+                            switch(tintIndex){
+                                case 2: return PotionUtil.getColor(headEffectCollection);
+                                case 1: return PotionUtil.getColor(handleEffectCollection);
                             }
+                            break;
                         case HANDLE:
-                            return tintIndex == 1 ? PotionUtil.getColor(PotionUtil.getPotion(stack.getOrCreateSubTag("handle"))) : -1;
-                        default:
-                            return -1;
+                            return tintIndex == 1 ? PotionUtil.getColor(handleEffectCollection) : -1;
                     }
+                    return -1;
                 }), item);
             }
         }

@@ -24,9 +24,9 @@ import java.util.List;
 
 public class TippedSwordItem extends SwordItem implements TippedTool{
     private final SwordItem parent;
-    private final TippedItemUtil.TippedType type;
+    private final TippedItemUtil.TippedSide type;
 
-    public TippedSwordItem(SwordItem parent, TippedItemUtil.TippedType type) {
+    public TippedSwordItem(SwordItem parent, TippedItemUtil.TippedSide type) {
         super(parent.getMaterial(),
                 (int) (parent.getAttackDamage() - parent.getMaterial().getAttackDamage()),
                 (float) parent.getAttributeModifiers(EquipmentSlot.MAINHAND).get(EntityAttributes.GENERIC_ATTACK_SPEED).toArray(new EntityAttributeModifier[] {})[0].getValue(),
@@ -67,7 +67,7 @@ public class TippedSwordItem extends SwordItem implements TippedTool{
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if(selected && entity instanceof LivingEntity){
-            TippedItemUtil.inventoryTick(stack, (LivingEntity) entity);
+            TippedItemUtil.inventoryTick(stack, (LivingEntity) entity, slot);
         }
         super.inventoryTick(stack, world, entity, slot, selected);
     }
@@ -103,7 +103,7 @@ public class TippedSwordItem extends SwordItem implements TippedTool{
     }
 
     @Override
-    public TippedItemUtil.TippedType getType() {
+    public TippedItemUtil.TippedSide getType() {
         return this.type;
     }
 }

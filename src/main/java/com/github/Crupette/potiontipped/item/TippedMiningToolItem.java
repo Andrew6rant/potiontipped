@@ -24,9 +24,9 @@ import java.util.List;
 
 public class TippedMiningToolItem extends MiningToolItem implements TippedTool{
     private final MiningToolItem parent;
-    private final TippedItemUtil.TippedType type;
+    private final TippedItemUtil.TippedSide type;
 
-    public TippedMiningToolItem(MiningToolItem parent, TippedItemUtil.TippedType type) {
+    public TippedMiningToolItem(MiningToolItem parent, TippedItemUtil.TippedSide type) {
         super(parent.getAttackDamage() - parent.getMaterial().getAttackDamage(),
                 (float) parent.getAttributeModifiers(EquipmentSlot.MAINHAND).get(EntityAttributes.GENERIC_ATTACK_SPEED).toArray(new EntityAttributeModifier[] {})[0].getValue(),
                 parent.getMaterial(),
@@ -68,7 +68,7 @@ public class TippedMiningToolItem extends MiningToolItem implements TippedTool{
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if(selected && entity instanceof LivingEntity){
-            TippedItemUtil.inventoryTick(stack, (LivingEntity) entity);
+            TippedItemUtil.inventoryTick(stack, (LivingEntity) entity, slot);
         }
         super.inventoryTick(stack, world, entity, slot, selected);
     }
@@ -104,7 +104,7 @@ public class TippedMiningToolItem extends MiningToolItem implements TippedTool{
     }
 
     @Override
-    public TippedItemUtil.TippedType getType() {
+    public TippedItemUtil.TippedSide getType() {
         return this.type;
     }
 }

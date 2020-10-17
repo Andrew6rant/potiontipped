@@ -15,15 +15,15 @@ public class TippedToolRegistry {
         PotionTipped.TIPPED_TOOLS.put(new Identifier(id.getNamespace(), id.getPath() + "-head"), Registry.register(
                 Registry.ITEM,
                 new Identifier(PotionTipped.MOD_ID, id.getNamespace() + "-" + id.getPath() + "-head"),
-                new TippedMiningToolItem((MiningToolItem) entry, TippedItemUtil.TippedType.HEAD)));
+                new TippedMiningToolItem((MiningToolItem) entry, TippedItemUtil.TippedSide.HEAD)));
         PotionTipped.TIPPED_TOOLS.put(new Identifier(id.getNamespace(), id.getPath() + "-handle"), Registry.register(
                 Registry.ITEM,
                 new Identifier(PotionTipped.MOD_ID, id.getNamespace() + "-" + id.getPath() + "-handle"),
-                new TippedMiningToolItem((MiningToolItem) entry, TippedItemUtil.TippedType.HANDLE)));
+                new TippedMiningToolItem((MiningToolItem) entry, TippedItemUtil.TippedSide.HANDLE)));
         PotionTipped.TIPPED_TOOLS.put(new Identifier(id.getNamespace(), id.getPath() + "-both"), Registry.register(
                 Registry.ITEM,
                 new Identifier(PotionTipped.MOD_ID, id.getNamespace() + "-" + id.getPath() + "-both"),
-                new TippedMiningToolItem((MiningToolItem) entry, TippedItemUtil.TippedType.BOTH)));
+                new TippedMiningToolItem((MiningToolItem) entry, TippedItemUtil.TippedSide.BOTH)));
         PotionTipped.log(Level.INFO, "Registered potion tipped variants for " + id);
     }
 
@@ -31,15 +31,15 @@ public class TippedToolRegistry {
         PotionTipped.TIPPED_TOOLS.put(new Identifier(id.getNamespace(), id.getPath() + "-head"), Registry.register(
                 Registry.ITEM,
                 new Identifier(PotionTipped.MOD_ID, id.getNamespace() + "-" + id.getPath() + "-head"),
-                new TippedSwordItem((SwordItem) entry, TippedItemUtil.TippedType.HEAD)));
+                new TippedSwordItem((SwordItem) entry, TippedItemUtil.TippedSide.HEAD)));
         PotionTipped.TIPPED_TOOLS.put(new Identifier(id.getNamespace(), id.getPath() + "-handle"), Registry.register(
                 Registry.ITEM,
                 new Identifier(PotionTipped.MOD_ID, id.getNamespace() + "-" + id.getPath() + "-handle"),
-                new TippedSwordItem((SwordItem) entry, TippedItemUtil.TippedType.HANDLE)));
+                new TippedSwordItem((SwordItem) entry, TippedItemUtil.TippedSide.HANDLE)));
         PotionTipped.TIPPED_TOOLS.put(new Identifier(id.getNamespace(), id.getPath() + "-both"), Registry.register(
                 Registry.ITEM,
                 new Identifier(PotionTipped.MOD_ID, id.getNamespace() + "-" + id.getPath() + "-both"),
-                new TippedSwordItem((SwordItem) entry, TippedItemUtil.TippedType.BOTH)));
+                new TippedSwordItem((SwordItem) entry, TippedItemUtil.TippedSide.BOTH)));
         PotionTipped.log(Level.INFO, "Registered potion tipped variants for " + id);
     }
 }

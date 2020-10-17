@@ -5,5 +5,5 @@ import net.minecraft.item.Item;
 
 public interface TippedTool {
     Item getParent();
-    TippedItemUtil.TippedType getType();
+    TippedItemUtil.TippedSide getType();
 }
