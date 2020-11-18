@@ -1,12 +1,15 @@
 package com.github.Crupette.potiontipped.client;
 
 import com.github.Crupette.potiontipped.PotionTipped;
+import com.github.Crupette.potiontipped.item.TippedMiningToolItem;
+import com.github.Crupette.potiontipped.item.TippedSwordItem;
 import com.github.Crupette.potiontipped.item.TippedTool;
 import com.swordglowsblue.artifice.api.Artifice;
 import com.swordglowsblue.artifice.api.ArtificeResourcePack;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.minecraft.item.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -19,31 +22,35 @@ public class PotionTippedClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        ArtificeResourcePack resourcePack = Artifice.registerAssets(PotionTipped.MOD_ID, pack -> {
-           pack.setDisplayName(PotionTipped.MOD_NAME);
-           pack.setDescription("Holds the item descriptions of all potion tipped items");
 
-           //Add all tipped items
-            for(Map.Entry<Identifier, Item> entry : PotionTipped.TIPPED_TOOLS.entrySet()){
-                Identifier itemName = PotionTipped.id(entry.getKey().toString().replace(':', '-'));
-                Item item = entry.getValue();
+        for(Map.Entry<Identifier, Item> entry : PotionTipped.TIPPED_TOOLS.entrySet()){
+            Identifier itemName = PotionTipped.id(entry.getKey().toString().replace(':', '-'));
+            Item item = entry.getValue();
 
-                TippedTool tippedTool = ((TippedTool)item);
-                Identifier base = Registry.ITEM.getId(tippedTool.getParent());
+            addToolToResourcePack(item, itemName);
+        }
 
-                boolean head =   itemName.getPath().contains("-head")   | itemName.getPath().contains("-both");
-                boolean handle = itemName.getPath().contains("-handle") | itemName.getPath().contains("-both");
-
-                AtomicInteger nextlayer = new AtomicInteger(1);
-                pack.addItemModel(itemName, model -> {
-                    model = model.parent(new Identifier("item/" + base.getPath()));
-                    if(handle) model = model.texture("layer" + nextlayer.getAndIncrement(), PotionTipped.id("item/handle"));
-                    if(head) model = model.texture("layer" + nextlayer.getAndIncrement(), PotionTipped.id(getHeadString(tippedTool)));
-                });
+        RegistryEntryAddedCallback.event(Registry.ITEM).register((i, identifier, item) -> {
+            if(item instanceof TippedSwordItem || item instanceof TippedMiningToolItem){
+                addToolToResourcePack(item, identifier);
             }
+        });
+    }
 
-            pack.setOptional();
-            pack.setVisible();
+    private void addToolToResourcePack(Item item, Identifier itemName){
+        Artifice.registerAssets(PotionTipped.MOD_ID + "_" + itemName.getPath(), pack -> {
+            TippedTool tippedTool = ((TippedTool)item);
+            Identifier base = Registry.ITEM.getId(tippedTool.getParent());
+
+            boolean head =   itemName.getPath().contains("-head")   | itemName.getPath().contains("-both");
+            boolean handle = itemName.getPath().contains("-handle") | itemName.getPath().contains("-both");
+
+            AtomicInteger nextlayer = new AtomicInteger(1);
+            pack.addItemModel(itemName, model -> {
+                model = model.parent(new Identifier(base.getNamespace(), "item/" + base.getPath()));
+                if(handle) model = model.texture("layer" + nextlayer.getAndIncrement(), PotionTipped.id("item/handle"));
+                if(head) model = model.texture("layer" + nextlayer.getAndIncrement(), PotionTipped.id(getHeadString(tippedTool)));
+            });
         });
     }
 

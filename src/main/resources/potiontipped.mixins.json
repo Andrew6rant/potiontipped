@@ -3,8 +3,7 @@
   "package": "com.github.Crupette.potiontipped.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MiningItemToolMixin",
-    "RegistryMixin"
+    "MiningItemToolMixin"
   ],
   "client": [
     "GameOptionsMixin",
